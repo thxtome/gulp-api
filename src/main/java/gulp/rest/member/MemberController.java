@@ -75,8 +75,7 @@ public class MemberController {
 		paramType = "body")
 	
 	public ResponseEntity<Object> updateMember(@RequestBody Member member, Authentication authentication) {
-		member.setMemberId((Long)authentication.getPrincipal());
-		return memberService.updateMember(member);
+		return memberService.updateMember(member, (Long)authentication.getPrincipal());
 	}
 	
 	@DeleteMapping("/member")

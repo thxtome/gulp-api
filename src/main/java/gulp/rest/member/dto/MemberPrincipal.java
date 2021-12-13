@@ -20,7 +20,7 @@ public class MemberPrincipal  implements UserDetails {
 	
 	public MemberPrincipal(Member member) {
 		super();
-		this.memberId = member.getMemberId();
+		this.memberId = member.getId();
 		this.email = member.getEmail();
 		this.password = member.getPassword();
 		this.nickname = member.getNickname();
