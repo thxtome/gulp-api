@@ -41,13 +41,10 @@ public class MemberService implements UserDetailsService {
 	}
 
 	public ResponseEntity<Object> signin(Member member) {
-		member.setPassword(passwordEncoder.encode(member.getPassword()));
-		Long pid = memberRepository.saveAndFlush(member).getMemberId();
-
-		HashMap<String, Long> response = new HashMap<>();
-		response.put("pid", pid);
+		member.encodePassword();
+		Long pid = memberRepository.saveAndFlush(member).getId();
 		
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(pid, HttpStatus.OK);
 	}
 
 	public ResponseEntity<Object> logout(BlackToken token) {
@@ -76,13 +73,10 @@ public class MemberService implements UserDetailsService {
 		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
 	
-	public ResponseEntity<Object> updateMember(Member member) {
-		Optional<Member> findMemberOptional = memberRepository.findById(member.getMemberId());
+	public ResponseEntity<Object> updateMember(Member member, Long memberId) {
+		Optional<Member> findMemberOptional = memberRepository.findById(memberId);
 		Member findMember = findMemberOptional.orElseThrow();
-		findMember.setGradeId(member.getGradeId());
-		findMember.setImgPath(member.getImgPath());
-		findMember.setNickname(member.getNickname());
-		findMember.setPassword(passwordEncoder.encode(member.getPassword()));
+		findMember.update(member.getNickname(), passwordEncoder.encode(member.getPassword()), member.getImgPath(), member.getGradeId());
 		return new ResponseEntity<>("success", HttpStatus.OK);
 	}
  
