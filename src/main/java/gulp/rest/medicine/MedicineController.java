@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gulp.rest.medicine.dto.MedicineForm;
 import gulp.rest.medicine.model.Brand;
 import gulp.rest.medicine.model.Category;
 import gulp.rest.medicine.model.Medicine;
@@ -25,12 +26,12 @@ public class MedicineController {
 	@ApiOperation(value = "약 생성", notes = "사용자에게 약의 정보를 받아서 약을 생성한다.")
 	@ApiImplicitParam(
 		name = "medicine", 
-		value = "sample\n\n " + "{\"name\":\"오메가 3\", \"brand\":{\"id\":1}, \"category\": {\"id\":1}}",
+		value = "sample\n\n " + "{\"name\":\"오메가 3\", \"brandId\":1, \"categoryId\": 1}",
 		required = true, 
-		dataTypeClass = Medicine.class, 
+		dataTypeClass = MedicineForm.class, 
 		paramType = "body")
-	public ResponseEntity<Object> createMember(@RequestBody Medicine medicine) {
-		return medicineService.createMedicine(medicine);
+	public ResponseEntity<Object> createMember(@RequestBody MedicineForm medicineform) {
+		return medicineService.createMedicine(medicineform);
 	}
 	
 	@GetMapping("/medicines")
