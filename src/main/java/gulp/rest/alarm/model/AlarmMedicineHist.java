@@ -17,7 +17,8 @@ import lombok.Setter;
 @Setter
 public class AlarmMedicineHist {
 	@Id @GeneratedValue
-	private Long alarmMedicineHistId;
+	@Column(name = "alarm_medicine_hist_id")
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "alarm_medicine_id")
