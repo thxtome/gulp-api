@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gulp.rest.medicine.dto.MedicineForm;
 import gulp.rest.medicine.model.Brand;
 import gulp.rest.medicine.model.Category;
 import gulp.rest.medicine.model.Medicine;
@@ -30,8 +31,12 @@ public class MedicineService {
 	@Autowired
 	private final CategoryRepository categoryRepository;
 
-	public ResponseEntity<Object> createMedicine(Medicine medicine) {
-		Long medicineId = medicineRepository.saveAndFlush(medicine).getMedicineId();
+	public ResponseEntity<Object> createMedicine(MedicineForm medicineForm) {
+		Long medicineId = medicineRepository.saveAndFlush(new Medicine().create(
+				medicineForm.getName()
+				, medicineForm.getCategoryId()
+				, medicineForm.getBrandId())
+			).getId();
 		return new ResponseEntity<>(medicineId, HttpStatus.OK);
 	}
 	
