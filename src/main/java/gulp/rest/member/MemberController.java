@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import gulp.rest.alarm.dto.AlarmForm;
 import gulp.rest.member.model.Member;
 import gulp.rest.member.service.MemberService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -83,5 +84,11 @@ public class MemberController {
 	public ResponseEntity<Object> deleteMember(Authentication authentication) {
 		return memberService.deleteMember((Long)authentication.getPrincipal());
 	}
+	
+	@PutMapping("/member/straight-day")
+	@ApiOperation(value = "연속 기록 날짜 더함", notes = "약을 다 먹은 날이 있으면 다 먹은 날을 수정한다. ")
+	public ResponseEntity<Object> addStraightDay(Authentication authentication) {
+		return memberService.updateStraightDay((Long)authentication.getPrincipal());
+	}	
 
 }

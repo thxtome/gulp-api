@@ -53,7 +53,7 @@ public class MemberService implements UserDetailsService {
 		} catch (Exception e) {
 			return new ResponseEntity<>("fail", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	public Boolean checkInvalidToken(BlackToken token) {
@@ -70,14 +70,18 @@ public class MemberService implements UserDetailsService {
 	
 	public ResponseEntity<Object> deleteMember(Long memberPid) {
 		memberRepository.deleteById(memberPid);
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	public ResponseEntity<Object> updateMember(Member member, Long memberId) {
-		Optional<Member> findMemberOptional = memberRepository.findById(memberId);
-		Member findMember = findMemberOptional.orElseThrow();
+		Member findMember = memberRepository.findById(memberId).orElseThrow();;
 		findMember.update(member.getNickname(), passwordEncoder.encode(member.getPassword()), member.getImgPath(), member.getGradeId());
-		return new ResponseEntity<>("success", HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	public ResponseEntity<Object> updateStraightDay(Long memberId) {
+		Member findMember = memberRepository.findById(memberId).orElseThrow();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
  
 }

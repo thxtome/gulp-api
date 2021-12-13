@@ -42,6 +42,8 @@ public class Member {
 	private String nickname;
 	
 	private String password;
+	
+	private int straightDay;
 		
 	@ColumnDefault("'https://firebasestorage.googleapis.com/v0/b/medicine-cc1f6.appspot.com/o/face.png?alt=media'")
 	private String imgPath;
@@ -52,6 +54,10 @@ public class Member {
 	
 	public void encodePassword () {
 		this.password =  new BCryptPasswordEncoder().encode(this.password);
+	}
+	
+	public void addStraightDay() {
+		this.straightDay += 1; 
 	}
 	
 	public void update(String nickname, String password, String imgPath, Long gradeId) {
