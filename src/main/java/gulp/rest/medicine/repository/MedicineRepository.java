@@ -11,5 +11,5 @@ import gulp.rest.medicine.model.Medicine;
 public interface MedicineRepository extends JpaRepository <Medicine, Long> {
 	List<Medicine> findByBrandId(Long brandId);
 	List<Medicine> findByCategoryId(Long categoryId);
-	List<Medicine> findByNameContainsAndBrandId(String name, Long brandId);
+	List<Medicine> findByNameContainsAndBrandIdAndCategoryId(String name, Long brandId, Long categoryId);
 }

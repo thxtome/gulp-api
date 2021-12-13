@@ -40,8 +40,8 @@ public class MedicineService {
 		return new ResponseEntity<>(medicineId, HttpStatus.OK);
 	}
 	
-	public ResponseEntity<Object> getMedicines(String name, Long brandId) {
-		List<Medicine> medicines = medicineRepository.findByNameContainsAndBrandId(name, brandId);
+	public ResponseEntity<Object> getMedicines(String name, Long brandId, Long categoryId) {
+		List<Medicine> medicines = medicineRepository.findByNameContainsAndBrandIdAndCategoryId(name == null ? "" : name, brandId, categoryId);
 		return new ResponseEntity<>(medicines, HttpStatus.OK);
 	}
 
