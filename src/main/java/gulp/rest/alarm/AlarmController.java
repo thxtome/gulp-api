@@ -51,12 +51,12 @@ public class AlarmController {
 	@PutMapping("/alarm")
 	@ApiOperation(value = "알림 수정", notes = "사용자에게 약의 정보를 받아서 약을 수정한다.")
 	@ApiImplicitParam(
-		name = "alarm", 
+		name = "alarmForm", 
 		value = "sample\n\n " + "{\"alarmId\":1, \"time\":\"20:30:00\", \"day\":\"135\", \"medicines\":[1,3,6]}",
 		required = true, 
-		dataTypeClass = Alarm.class, 
+		dataTypeClass = AlarmForm.class, 
 		paramType = "body")
-	public ResponseEntity<Object> createMember(@RequestBody Alarm alarm) {
-		return null;
+	public ResponseEntity<Object> updateAlarm(@RequestBody AlarmForm alarmForm, Authentication authentication) {
+		return alarmService.updateAlarm(alarmForm);
 	}
 }

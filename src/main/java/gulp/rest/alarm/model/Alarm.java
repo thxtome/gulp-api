@@ -48,13 +48,20 @@ public class Alarm {
 	public Alarm create(AlarmForm alarmForm, Long memberId) {
 		this.day = alarmForm.getDay();
 		this.time = alarmForm.getTime();
-		new Medicine();
 		this.alarmMedicines = alarmForm.getMedicineIdList().stream()
 				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
-					.collect(Collectors.toList());
+				.collect(Collectors.toList());
 		this.member = Member.builder().id(memberId).build();
 
 		return this;
+	}
+
+	public void update(AlarmForm alarmForm) {
+		this.day = alarmForm.getDay();
+		this.time = alarmForm.getTime();
+		this.alarmMedicines = alarmForm.getMedicineIdList().stream()
+				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
+				.collect(Collectors.toList());
 	}
 
 	public Long getId() {

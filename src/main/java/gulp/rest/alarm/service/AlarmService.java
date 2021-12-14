@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class AlarmService {
-	
+
 	@Autowired
 	private final AlarmRepository alarmRepository;
 
@@ -25,11 +25,20 @@ public class AlarmService {
 	}
 
 	public ResponseEntity<Object> getAlarmList(Long memberId, String day) {
-		return new ResponseEntity<Object>(alarmRepository.findAllByMemberIdAndDayContains(memberId, day), HttpStatus.OK); 
+		return new ResponseEntity<Object>(day == null
+						? alarmRepository.findAllByMemberId(memberId)
+						: alarmRepository.findAllByMemberIdAndDayContains(memberId, day)
+					, HttpStatus.OK);
 	}
 
 	public ResponseEntity<Object> getAlarm(Long memberId, Long alarmId) {
 		return new ResponseEntity<Object>(alarmRepository.findAllByIdAndMemberId(memberId, alarmId), HttpStatus.OK);
 	}
-	
+
+	public ResponseEntity<Object> updateAlarm(AlarmForm alarmForm) {
+		Alarm findAlarm = alarmRepository.findById(alarmForm.getId()).orElseThrow();
+		findAlarm.update(alarmForm);
+		return new ResponseEntity<Object>(findAlarm.getId(), HttpStatus.OK);
+	}
+
 }

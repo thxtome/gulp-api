@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlarmForm {
+	private Long id;
+	
 	private LocalTime time;
 
 	private String day;

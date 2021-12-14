@@ -14,6 +14,9 @@ public interface AlarmRepository extends JpaRepository <Alarm, Long> {
 	
 	@Query("SELECT distinct a FROM Alarm a join fetch a.alarmMedicines join a.member m WHERE a.day Like %:day% AND m.id = :memberId")
 	List<Alarm> findAllByMemberIdAndDayContains(@Param("memberId") Long memberId, @Param("day") String day);
+	
+	@Query("SELECT distinct a FROM Alarm a join fetch a.alarmMedicines join a.member m WHERE m.id = :memberId")
+	List<Alarm> findAllByMemberId(@Param("memberId") Long memberId);
 
 	@Query("SELECT distinct a FROM Alarm a join fetch a.alarmMedicines join a.member m WHERE a.id = :alarmId AND m.id = :memberId")
 	Alarm findAllByIdAndMemberId(@Param("memberId") Long memberId, @Param("alarmId") Long alarmId);
