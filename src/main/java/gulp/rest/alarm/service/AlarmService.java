@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gulp.rest.alarm.dto.AlarmForm;
 import gulp.rest.alarm.model.Alarm;
+import gulp.rest.alarm.model.AlarmHist;
+import gulp.rest.alarm.repository.AlarmHistRepository;
 import gulp.rest.alarm.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -18,9 +20,13 @@ public class AlarmService {
 
 	@Autowired
 	private final AlarmRepository alarmRepository;
+	
+	@Autowired
+	private final AlarmHistRepository alarmHistRepository;	
 
 	public ResponseEntity<Object> createAlarm(AlarmForm alarmForm, Long memberId) {
 		Alarm savedAlarm = alarmRepository.save(new Alarm().create(alarmForm, memberId));
+		alarmHistRepository.save(new AlarmHist().create(savedAlarm));
 		return new ResponseEntity<Object>(savedAlarm.getId(), HttpStatus.OK);
 	}
 

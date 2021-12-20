@@ -34,10 +34,17 @@ public class AlarmHist {
 	@Column(columnDefinition="BOOLEAN DEFAULT false")
 	private boolean isEaten; 
 	
+	@Column(columnDefinition="BOOLEAN DEFAULT false")
+	private boolean isPushed; 
+	
 	private LocalDateTime created_at;
 	
 	@ManyToOne
 	@JoinColumn(name = "alarm_id")
 	private Alarm alarm;
 	
+	public AlarmHist create(Alarm alarm) {
+		this.alarm = alarm;
+		return this;
+	}
 }
