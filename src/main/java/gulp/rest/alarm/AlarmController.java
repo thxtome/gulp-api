@@ -3,7 +3,7 @@ package gulp.rest.alarm;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import gulp.rest.alarm.dto.AlarmForm;
-import gulp.rest.alarm.model.Alarm;
 import gulp.rest.alarm.service.AlarmService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -52,11 +51,17 @@ public class AlarmController {
 	@ApiOperation(value = "알림 수정", notes = "사용자에게 약의 정보를 받아서 약을 수정한다.")
 	@ApiImplicitParam(
 		name = "alarmForm", 
-		value = "sample\n\n " + "{\"alarmId\":1, \"time\":\"20:30:00\", \"day\":\"135\", \"medicines\":[1,3,6]}",
+		value = "sample\n\n " + "{\"id\":1, \"time\":\"20:30:00\", \"day\":\"135\", \"medicineIdList\":[1,3,6]}",
 		required = true, 
 		dataTypeClass = AlarmForm.class, 
 		paramType = "body")
 	public ResponseEntity<Object> updateAlarm(@RequestBody AlarmForm alarmForm, Authentication authentication) {
 		return alarmService.updateAlarm(alarmForm);
+	}
+	
+	@DeleteMapping("/alarms/{alarm_id}")
+	@ApiOperation(value = "알림 삭제", notes = "사용자에게 약의 정보를 받아서 약을 삭제한다.")
+	public ResponseEntity<Object> deleteAlarm(@PathVariable("alarm_id") Long alarmId,  Authentication authentication) {
+		return alarmService.deleteAlarm(alarmId);
 	}
 }

@@ -1,7 +1,8 @@
 package gulp.rest.alarm.model;
 
 import java.time.LocalTime;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -21,7 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -43,8 +43,11 @@ public class Alarm {
 	private Member member;
 
 	@OneToMany(mappedBy = "alarm", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<AlarmMedicine> alarmMedicines;
+	private Collection<AlarmMedicine> alarmMedicines = new ArrayList<>();
 
+	@Column(columnDefinition="BOOLEAN DEFAULT false")
+	private boolean isRemoved;
+	
 	public Alarm create(AlarmForm alarmForm, Long memberId) {
 		this.day = alarmForm.getDay();
 		this.time = alarmForm.getTime();
@@ -55,13 +58,17 @@ public class Alarm {
 
 		return this;
 	}
-
+	
 	public void update(AlarmForm alarmForm) {
 		this.day = alarmForm.getDay();
 		this.time = alarmForm.getTime();
 		this.alarmMedicines = alarmForm.getMedicineIdList().stream()
 				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
 				.collect(Collectors.toList());
+	}
+	
+	public void delete() {
+		this.isRemoved = true;
 	}
 
 	public Long getId() {
