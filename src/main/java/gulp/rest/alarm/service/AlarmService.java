@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gulp.rest.alarm.dto.AlarmForm;
 import gulp.rest.alarm.model.Alarm;
-import gulp.rest.alarm.model.AlarmHist;
 import gulp.rest.alarm.repository.AlarmHistRepository;
+import gulp.rest.alarm.repository.AlarmMedicineRepository;
 import gulp.rest.alarm.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,21 +20,21 @@ public class AlarmService {
 
 	@Autowired
 	private final AlarmRepository alarmRepository;
-	
+
 	@Autowired
-	private final AlarmHistRepository alarmHistRepository;	
+	private final AlarmHistRepository alarmHistRepository;
+
+	@Autowired
+	private final AlarmMedicineRepository alarmMedicineRepository;
 
 	public ResponseEntity<Object> createAlarm(AlarmForm alarmForm, Long memberId) {
 		Alarm savedAlarm = alarmRepository.save(new Alarm().create(alarmForm, memberId));
-		alarmHistRepository.save(new AlarmHist().create(savedAlarm));
 		return new ResponseEntity<Object>(savedAlarm.getId(), HttpStatus.OK);
 	}
 
 	public ResponseEntity<Object> getAlarmList(Long memberId, String day) {
-		return new ResponseEntity<Object>(day == null
-						? alarmRepository.findAllByMemberId(memberId)
-						: alarmRepository.findAllByMemberIdAndDayContains(memberId, day)
-					, HttpStatus.OK);
+		return new ResponseEntity<Object>(alarmRepository.findAllByMemberIdAndDayContains(memberId, day),
+				HttpStatus.OK);
 	}
 
 	public ResponseEntity<Object> getAlarm(Long memberId, Long alarmId) {
@@ -43,7 +43,14 @@ public class AlarmService {
 
 	public ResponseEntity<Object> updateAlarm(AlarmForm alarmForm) {
 		Alarm findAlarm = alarmRepository.findById(alarmForm.getId()).orElseThrow();
+		alarmMedicineRepository.deleteAllInBatch(findAlarm.getAlarmMedicines());
 		findAlarm.update(alarmForm);
+		return new ResponseEntity<Object>(findAlarm.getId(), HttpStatus.OK);
+	}
+
+	public ResponseEntity<Object> deleteAlarm(Long alarmId) {
+		Alarm findAlarm = alarmRepository.findById(alarmId).orElseThrow();
+		findAlarm.delete();
 		return new ResponseEntity<Object>(findAlarm.getId(), HttpStatus.OK);
 	}
 

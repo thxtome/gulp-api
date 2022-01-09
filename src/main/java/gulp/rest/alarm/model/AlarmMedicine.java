@@ -2,12 +2,11 @@ package gulp.rest.alarm.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import gulp.rest.medicine.model.Medicine;
 import lombok.Getter;
@@ -21,12 +20,11 @@ public class AlarmMedicine {
 	@Column(name = "alarm_medicine_id")
 	private Long id;
 	
-	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(targetEntity = Alarm.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "alarm_id")
 	private Alarm alarm;
 	
-	@ManyToOne
+	@ManyToOne(targetEntity = Medicine.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "medicine_id")
 	private Medicine medicine;
 	
@@ -34,6 +32,5 @@ public class AlarmMedicine {
 		this.medicine = medicine;
 		this.alarm = alarm;
 		return this;
-		
 	}
 }

@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Alarm {
@@ -38,15 +37,21 @@ public class Alarm {
 
 	private String day;
 
-	@ManyToOne(targetEntity = Member.class)
+	@ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id") // (2)
 	private Member member;
 
-	@OneToMany(mappedBy = "alarm", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "alarm", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Collection<AlarmMedicine> alarmMedicines = new ArrayList<>();
 
 	@Column(columnDefinition="BOOLEAN DEFAULT false")
 	private boolean isRemoved;
+	
+	@Column(columnDefinition="BOOLEAN DEFAULT false")
+	private boolean isEaten; 
+	
+	@Column(columnDefinition="BOOLEAN DEFAULT false")
+	private boolean isPushed; 
 	
 	public Alarm create(AlarmForm alarmForm, Long memberId) {
 		this.day = alarmForm.getDay();
@@ -65,10 +70,13 @@ public class Alarm {
 		this.alarmMedicines = alarmForm.getMedicineIdList().stream()
 				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
 				.collect(Collectors.toList());
+		this.isEaten = false;
+		this.isPushed = false;
 	}
 	
 	public void delete() {
 		this.isRemoved = true;
+		this.isPushed = true;
 	}
 
 	public Long getId() {

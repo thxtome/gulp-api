@@ -2,6 +2,7 @@ package gulp.rest.medicine.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -26,15 +27,15 @@ public class Medicine {
 	
 	private String name;
 
-	@ManyToOne(targetEntity=Member.class)
+	@ManyToOne(targetEntity=Member.class, fetch = FetchType.LAZY)
 	@JoinColumn(name="member_id") // (2)
 	private Member member;
 	
-	@ManyToOne(targetEntity=Brand.class)
+	@ManyToOne(targetEntity=Brand.class, fetch = FetchType.LAZY)
 	@JoinColumn(name="brand_id") // (2)
 	private Brand brand;
 	
-	@ManyToOne(targetEntity=Category.class)
+	@ManyToOne(targetEntity=Category.class, fetch = FetchType.LAZY)
 	@JoinColumn(name="category_id") // (2)
 	private Category category;
 	

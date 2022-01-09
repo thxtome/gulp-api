@@ -2,7 +2,10 @@ package gulp.rest.alarm.model;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import gulp.rest.medicine.model.Medicine;
 import gulp.rest.member.model.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,12 +34,6 @@ public class AlarmHist {
 	@GeneratedValue
 	@Column(name = "alarm_hist_id")
 	private Long id;
-
-	@Column(columnDefinition="BOOLEAN DEFAULT false")
-	private boolean isEaten; 
-	
-	@Column(columnDefinition="BOOLEAN DEFAULT false")
-	private boolean isPushed; 
 	
 	private LocalDateTime created_at;
 	
@@ -43,8 +41,14 @@ public class AlarmHist {
 	@JoinColumn(name = "alarm_id")
 	private Alarm alarm;
 	
-	public AlarmHist create(Alarm alarm) {
+	@OneToMany(mappedBy = "alarmHist", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private Collection<AlarmHistMedicine> alarmHistMedicines = new ArrayList<>();
+	
+	public AlarmHist create(Alarm alarm, List<Long> medicineIdList) {
 		this.alarm = alarm;
+		this.alarmHistMedicines = medicineIdList.stream()
+				.map((medicineId) -> new AlarmHistMedicine().create(this, Medicine.builder().id(medicineId).build()))
+				.collect(Collectors.toList());
 		return this;
 	}
 }
