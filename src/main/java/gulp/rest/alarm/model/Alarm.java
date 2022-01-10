@@ -1,8 +1,10 @@
 package gulp.rest.alarm.model;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -19,7 +21,6 @@ import gulp.rest.alarm.dto.AlarmForm;
 import gulp.rest.medicine.model.Medicine;
 import gulp.rest.member.model.Member;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -60,16 +61,22 @@ public class Alarm {
 				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
 				.collect(Collectors.toList());
 		this.member = Member.builder().id(memberId).build();
-
+		
+		LocalDateTime currentDateTime = LocalDateTime.now();  
+		if(day.contains(String.valueOf(currentDateTime.getDayOfWeek().getValue()))) {
+			LocalTime currentTime = LocalTime.now();
+			this.isPushed = this.time.isBefore(currentTime);
+		}
 		return this;
 	}
 	
 	public void update(AlarmForm alarmForm) {
 		this.day = alarmForm.getDay();
 		this.time = alarmForm.getTime();
-		this.alarmMedicines = alarmForm.getMedicineIdList().stream()
+		this.alarmMedicines.clear();
+		this.alarmMedicines.addAll(alarmForm.getMedicineIdList().stream()
 				.map((medicineId) -> new AlarmMedicine().create(this, Medicine.builder().id(medicineId).build()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 		this.isEaten = false;
 		this.isPushed = false;
 	}
@@ -77,6 +84,12 @@ public class Alarm {
 	public void delete() {
 		this.isRemoved = true;
 		this.isPushed = true;
+	}
+	
+	public AlarmHist dose() {
+		this.isEaten = true;
+		AlarmHist alarmHist = new AlarmHist().create(this, this.alarmMedicines.stream().map((alarmMedicine)->{return alarmMedicine.getMedicine();}).collect(Collectors.toList()));
+		return alarmHist;
 	}
 
 	public Long getId() {

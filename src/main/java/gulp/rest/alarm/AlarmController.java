@@ -64,4 +64,10 @@ public class AlarmController {
 	public ResponseEntity<Object> deleteAlarm(@PathVariable("alarm_id") Long alarmId,  Authentication authentication) {
 		return alarmService.deleteAlarm(alarmId);
 	}
+	
+	@PutMapping("/alarm/{alarm_id}/dose")
+	@ApiOperation(value = "약 복용", notes = "사용자에게 약을 복용했다는 요청을 받고 기록을 생성한다.")
+	public ResponseEntity<Object> doseMedicines(Authentication authentication, @PathVariable("alarm_id") Long alarmId) {
+		return alarmService.doseMedicines((Long)authentication.getPrincipal(), alarmId);
+	}	
 }

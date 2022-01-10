@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Getter
 @Builder
 @NoArgsConstructor
@@ -35,4 +34,8 @@ public class AlarmDto {
 	private boolean isEaten;
 	
 	private List<MedicineDto> medicineList = new ArrayList<>();
+	
+	public boolean getIsEaten() {
+		return this.isEaten;
+	}
 }

@@ -10,7 +10,7 @@ import gulp.rest.alarm.dto.AlarmDto;
 @Repository
 public interface CustomAlarmRepository {
 	
-	List<AlarmDto> findAllByMemberIdAndDayContains(@Param("memberId") Long memberId, @Param("day") String day);
+	List<AlarmDto> findAllDtoByMemberIdAndDayContains(@Param("memberId") Long memberId, @Param("day") String day);
 
-	AlarmDto findAllByIdAndMemberId(@Param("memberId") Long memberId, @Param("alarmId") Long alarmId);
+	AlarmDto findDtoByIdAndMemberId(@Param("memberId") Long memberId, @Param("alarmId") Long alarmId);
 }

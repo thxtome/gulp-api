@@ -31,7 +31,7 @@ public class AlarmRepositoryImpl implements CustomAlarmRepository {
 		this.jpaQueryFactory = new JPAQueryFactory(entityManager);
 	}
 
-	public List<AlarmDto> findAllByMemberIdAndDayContains(Long memberId, String day) {
+	public List<AlarmDto> findAllDtoByMemberIdAndDayContains(Long memberId, String day) {
 		JPQLQuery<Alarm> query = jpaQueryFactory.selectFrom(alarm);
 		
 		query
@@ -61,7 +61,7 @@ public class AlarmRepositoryImpl implements CustomAlarmRepository {
 	}
 
 	@Override
-	public AlarmDto findAllByIdAndMemberId(Long memberId, Long alarmId) {
+	public AlarmDto findDtoByIdAndMemberId(Long memberId, Long alarmId) {
 		JPQLQuery<Alarm> query = jpaQueryFactory.selectFrom(alarm);
 		List<AlarmDto> list = query
 		.innerJoin(member)

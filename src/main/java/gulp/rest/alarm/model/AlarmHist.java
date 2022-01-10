@@ -42,12 +42,12 @@ public class AlarmHist {
 	private Alarm alarm;
 	
 	@OneToMany(mappedBy = "alarmHist", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Collection<AlarmHistMedicine> alarmHistMedicines = new ArrayList<>();
+	private List<AlarmHistMedicine> alarmHistMedicines = new ArrayList<>();
 	
-	public AlarmHist create(Alarm alarm, List<Long> medicineIdList) {
+	public AlarmHist create(Alarm alarm, List<Medicine> medicineList) {
 		this.alarm = alarm;
-		this.alarmHistMedicines = medicineIdList.stream()
-				.map((medicineId) -> new AlarmHistMedicine().create(this, Medicine.builder().id(medicineId).build()))
+		this.alarmHistMedicines = medicineList.stream()
+				.map((medicine) -> new AlarmHistMedicine().create(this, medicine))
 				.collect(Collectors.toList());
 		return this;
 	}
