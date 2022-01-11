@@ -1,6 +1,7 @@
 package gulp.rest.exception.enums;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ public enum ServiceError {
             String message = getMessage();
             HashMap<String, String> hm = new HashMap<>();
             hm.put("error_code", "E000");
-            hm.put("message", "일시적인 오류가 발생했습니.");
+            hm.put("message", "일시적인 오류가 발생했습니다.");
             return new ResponseEntity<Object>(hm, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     },
@@ -106,6 +107,26 @@ public enum ServiceError {
             hm.put("message", "비밀번호를 확인해주세요.");
             return new ResponseEntity<Object>(hm, HttpStatus.UNAUTHORIZED);
         }
+    },
+    
+    RESOURCE_NOT_FOUND(){
+    	@Override
+    	public ResponseEntity<Object> getResponse() {
+    		HashMap<String, String> hm = new HashMap<>();
+    		hm.put("error_code", "E404");
+    		hm.put("message", Optional.ofNullable(getMessage()).orElse("데이터가 존재하지 않습니다."));
+    		return new ResponseEntity<Object>(hm, HttpStatus.NOT_FOUND);
+    	}
+    },
+    
+    ALREADY_EXISTS(){
+    	@Override
+    	public ResponseEntity<Object> getResponse() {
+    		HashMap<String, String> hm = new HashMap<>();
+    		hm.put("error_code", "E409");
+    		hm.put("message", Optional.ofNullable(getMessage()).orElse("이미 존재하는 데이터입니다."));
+    		return new ResponseEntity<Object>(hm, HttpStatus.CONFLICT);
+    	}
     },
     
  

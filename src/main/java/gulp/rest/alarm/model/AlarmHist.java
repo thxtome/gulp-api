@@ -35,7 +35,8 @@ public class AlarmHist {
 	@Column(name = "alarm_hist_id")
 	private Long id;
 	
-	private LocalDateTime created_at;
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private LocalDateTime createdAt = LocalDateTime.now();
 	
 	@ManyToOne
 	@JoinColumn(name = "alarm_id")

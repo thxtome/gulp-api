@@ -91,6 +91,10 @@ public class Alarm {
 		AlarmHist alarmHist = new AlarmHist().create(this, this.alarmMedicines.stream().map((alarmMedicine)->{return alarmMedicine.getMedicine();}).collect(Collectors.toList()));
 		return alarmHist;
 	}
+	
+	public void cancelDose() {
+		this.isEaten = false;
+	}
 
 	public Long getId() {
 		return this.id;

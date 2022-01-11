@@ -28,7 +28,7 @@ public class AlarmHistMedicine {
 	private Long id;
 	
 	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	private LocalDateTime createdAt; 
+	private LocalDateTime createdAt = LocalDateTime.now();
 	
 	@ManyToOne(targetEntity = AlarmHist.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "alarm_hist_id") // (2)

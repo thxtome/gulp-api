@@ -40,7 +40,8 @@ public class AlarmRepositoryImpl implements CustomAlarmRepository {
 			.leftJoin(alarmMedicine)
 			.on(alarmMedicine.in(alarm.alarmMedicines))
 			.leftJoin(medicine)
-			.on(alarmMedicine.medicine.eq(medicine));
+			.on(alarmMedicine.medicine.eq(medicine))
+			.where(alarm.isRemoved.eq(false));
 			
 			if (StringUtils.hasText(day)) {
 				query.where(alarm.day.contains(day));

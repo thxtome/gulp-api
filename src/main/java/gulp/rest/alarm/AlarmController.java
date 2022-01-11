@@ -43,7 +43,7 @@ public class AlarmController {
 		required = true, 
 		dataTypeClass = AlarmForm.class, 
 		paramType = "body")
-	public ResponseEntity<Object> createAlarm(@RequestBody AlarmForm alarmForm, Authentication authentication) {
+	public ResponseEntity<Object> createAlarm(Authentication authentication, @RequestBody AlarmForm alarmForm) {
 		return alarmService.createAlarm(alarmForm, (Long)authentication.getPrincipal());
 	}
 	
@@ -55,13 +55,13 @@ public class AlarmController {
 		required = true, 
 		dataTypeClass = AlarmForm.class, 
 		paramType = "body")
-	public ResponseEntity<Object> updateAlarm(@RequestBody AlarmForm alarmForm, Authentication authentication) {
+	public ResponseEntity<Object> updateAlarm(Authentication authentication, @RequestBody AlarmForm alarmForm) {
 		return alarmService.updateAlarm(alarmForm);
 	}
 	
 	@DeleteMapping("/alarms/{alarm_id}")
 	@ApiOperation(value = "알림 삭제", notes = "사용자에게 약의 정보를 받아서 약을 삭제한다.")
-	public ResponseEntity<Object> deleteAlarm(@PathVariable("alarm_id") Long alarmId,  Authentication authentication) {
+	public ResponseEntity<Object> deleteAlarm(Authentication authentication, @PathVariable("alarm_id") Long alarmId) {
 		return alarmService.deleteAlarm(alarmId);
 	}
 	
@@ -69,5 +69,11 @@ public class AlarmController {
 	@ApiOperation(value = "약 복용", notes = "사용자에게 약을 복용했다는 요청을 받고 기록을 생성한다.")
 	public ResponseEntity<Object> doseMedicines(Authentication authentication, @PathVariable("alarm_id") Long alarmId) {
 		return alarmService.doseMedicines((Long)authentication.getPrincipal(), alarmId);
-	}	
+	}
+	
+	@PutMapping("/alarm/{alarm_id}/cancel")
+	@ApiOperation(value = "약 복용 취소", notes = "사용자에게 약을 복용 취소했다는 요청을 받고 기록을 지운다.")
+	public ResponseEntity<Object> cancelDoseMedicines(Authentication authentication, @PathVariable("alarm_id") Long alarmId) {
+		return alarmService.cancelDoseMedicines((Long)authentication.getPrincipal(), alarmId);
+	}
 }

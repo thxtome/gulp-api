@@ -1,5 +1,9 @@
 package gulp.rest.alarm.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,6 +14,8 @@ import gulp.rest.alarm.model.Alarm;
 import gulp.rest.alarm.model.AlarmHist;
 import gulp.rest.alarm.repository.AlarmHistRepository;
 import gulp.rest.alarm.repository.AlarmRepository;
+import gulp.rest.exception.dto.ServiceException;
+import gulp.rest.exception.enums.ServiceError;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,11 +54,27 @@ public class AlarmService {
 	}
 	
 	public ResponseEntity<Object> doseMedicines(Long memberId, Long alarmId) {
+		LocalDateTime today = LocalDate.now().atTime(0, 0);
+		AlarmHist findAlarmHist = alarmHistRepository.findByAlarmIdAndCreatedAtAfter(alarmId, today);
+		if(findAlarmHist != null) {
+			throw new ServiceException(ServiceError.ALREADY_EXISTS);
+		}
 		Alarm findAlarm = alarmRepository.findByIdAndMemberId(memberId, alarmId);
 		AlarmHist alarmHist = findAlarm.dose();
 		alarmHistRepository.save(alarmHist);
 		return new ResponseEntity<Object>(alarmHist.getId(), HttpStatus.OK);
-//		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+	public ResponseEntity<Object> cancelDoseMedicines(Long principal, Long alarmId) {
+		LocalDateTime today = LocalDate.now().atTime(0, 0);
+		AlarmHist findAlarmHist = alarmHistRepository.findByAlarmIdAndCreatedAtAfter(alarmId, today);
+		if(findAlarmHist == null) {
+			throw new ServiceException(ServiceError.RESOURCE_NOT_FOUND);
+		}
+		alarmHistRepository.delete(findAlarmHist);
+		Alarm findAlarm = alarmRepository.findById(alarmId).orElseThrow();
+		findAlarm.cancelDose();
+		return new ResponseEntity<Object>(findAlarmHist.getId(), HttpStatus.OK);
 	}
 	
 
