@@ -2,7 +2,6 @@ package gulp.rest.alarm.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

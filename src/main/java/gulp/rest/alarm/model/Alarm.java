@@ -95,6 +95,12 @@ public class Alarm {
 	public void cancelDose() {
 		this.isEaten = false;
 	}
+	
+	public Alarm reset() {
+		this.isPushed = false;
+		this.isEaten = false;
+		return this;
+	}
 
 	public Long getId() {
 		return this.id;
