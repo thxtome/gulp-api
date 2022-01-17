@@ -26,7 +26,7 @@ public class AlarmScheduler {
     @Autowired
     private AlarmJobConfig alarmJobConfig;
 
-    @Scheduled(cron = "0 0 0 * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void runJob() {
         Map<String, JobParameter> confMap = new HashMap<>();
         confMap.put("createDate", new JobParameter(new Date()));

@@ -41,7 +41,7 @@ public class AlarmJobConfig {
     @StepScope
     public JpaPagingItemReader<Alarm> alarmUpdateJpaReader(@Value("#{jobParameters[createDate]}") Date createDate) {
         JpaPagingItemReader<Alarm> jpaPagingItemReader = new JpaPagingItemReader<>();
-        jpaPagingItemReader.setQueryString("select a from Alarm where a.is_removed = false");
+        jpaPagingItemReader.setQueryString("select a from Alarm a join fetch a.alarmMedicines where a.isRemoved = false");
         jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
         jpaPagingItemReader.setPageSize(10); 
         return jpaPagingItemReader;
@@ -61,7 +61,7 @@ public class AlarmJobConfig {
     
     @Bean
     public Step alarmUpdateJobStep(StepBuilderFactory stepBuilderFactory) {
-        return stepBuilderFactory.get("inactiveUserStep") 
+        return stepBuilderFactory.get("alarmUpdateJobStep") 
                 .<Alarm, Alarm> chunk(10) 
                 .reader(alarmUpdateJpaReader(null))
                 .processor(alarmUpdateProcessor())
