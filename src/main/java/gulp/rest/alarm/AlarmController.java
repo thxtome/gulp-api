@@ -76,4 +76,10 @@ public class AlarmController {
 	public ResponseEntity<Object> cancelDoseMedicines(Authentication authentication, @PathVariable("alarm_id") Long alarmId) {
 		return alarmService.cancelDoseMedicines((Long)authentication.getPrincipal(), alarmId);
 	}
+	
+	@GetMapping("/alarmHists")
+	@ApiOperation(value = "일자별 알림 내역 조회", notes = "사용자에게 날짜를 받아서 알림 내역을 조회한다.")
+	public ResponseEntity<Object> getAlarmHist(Authentication authentication, String date ) {
+		return alarmService.getAlarmHistForCalendar((Long)authentication.getPrincipal(), date);
+	}
 }

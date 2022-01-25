@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import gulp.rest.medicine.model.Medicine;
 import gulp.rest.member.model.Member;
 import lombok.AllArgsConstructor;
@@ -40,13 +42,17 @@ public class AlarmHist {
 	
 	@ManyToOne
 	@JoinColumn(name = "alarm_id")
+	@JsonIgnore
 	private Alarm alarm;
+	
+	private LocalTime time;
 	
 	@OneToMany(mappedBy = "alarmHist", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<AlarmHistMedicine> alarmHistMedicines = new ArrayList<>();
 	
 	public AlarmHist create(Alarm alarm, List<Medicine> medicineList) {
 		this.alarm = alarm;
+		this.time = alarm.getTime();
 		this.alarmHistMedicines = medicineList.stream()
 				.map((medicine) -> new AlarmHistMedicine().create(this, medicine))
 				.collect(Collectors.toList());

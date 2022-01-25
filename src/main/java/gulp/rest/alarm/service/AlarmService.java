@@ -2,6 +2,7 @@ package gulp.rest.alarm.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import gulp.rest.alarm.dto.AlarmForm;
+import gulp.rest.alarm.dto.AlarmHistDto;
 import gulp.rest.alarm.model.Alarm;
 import gulp.rest.alarm.model.AlarmHist;
 import gulp.rest.alarm.repository.AlarmHistRepository;
@@ -76,5 +78,8 @@ public class AlarmService {
 		return new ResponseEntity<Object>(findAlarmHist.getId(), HttpStatus.OK);
 	}
 	
-
+	public ResponseEntity<Object> getAlarmHistForCalendar(Long memberId, String date) {
+		List<AlarmHistDto> findAlarmHists = alarmHistRepository.findByAlarmIdAndCreatedAt(memberId, date);
+		return new ResponseEntity<Object>(findAlarmHists != null ? findAlarmHists : new String[0] , HttpStatus.OK)  ;
+	}
 }

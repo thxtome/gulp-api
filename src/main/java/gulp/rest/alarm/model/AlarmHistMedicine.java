@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import gulp.rest.medicine.model.Medicine;
 import gulp.rest.member.model.Member;
 import lombok.AllArgsConstructor;
@@ -31,7 +33,8 @@ public class AlarmHistMedicine {
 	private LocalDateTime createdAt = LocalDateTime.now();
 	
 	@ManyToOne(targetEntity = AlarmHist.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "alarm_hist_id") // (2)
+	@JoinColumn(name = "alarm_hist_id")
+	@JsonIgnore
 	private AlarmHist alarmHist;
 	
 	@ManyToOne(targetEntity = Medicine.class, fetch = FetchType.LAZY)
