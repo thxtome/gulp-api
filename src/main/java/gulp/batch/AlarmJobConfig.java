@@ -1,18 +1,14 @@
 package gulp.batch;
 
-import java.util.Date;
-
 import javax.persistence.EntityManagerFactory;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,13 +29,12 @@ public class AlarmJobConfig {
     public Job alarmUpdateJob() {
         return jobBuilderFactory.get("alarmUpdateJob")
                 .preventRestart() 
-                .start(alarmUpdateJobStep(stepBuilderFactory)) 
+                .start(alarmUpdateJobStep()) 
                 .build();
     }
     
     @Bean(destroyMethod="")
-    @StepScope
-    public JpaPagingItemReader<Alarm> alarmUpdateJpaReader(@Value("#{jobParameters[createDate]}") Date createDate) {
+    public JpaPagingItemReader<Alarm> alarmUpdateJpaReader() {
         JpaPagingItemReader<Alarm> jpaPagingItemReader = new JpaPagingItemReader<>();
         jpaPagingItemReader.setQueryString("select a from Alarm a join fetch a.alarmMedicines where a.isRemoved = false");
         jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
@@ -60,10 +55,10 @@ public class AlarmJobConfig {
     }
     
     @Bean
-    public Step alarmUpdateJobStep(StepBuilderFactory stepBuilderFactory) {
+    public Step alarmUpdateJobStep() {
         return stepBuilderFactory.get("alarmUpdateJobStep") 
                 .<Alarm, Alarm> chunk(10) 
-                .reader(alarmUpdateJpaReader(null))
+                .reader(alarmUpdateJpaReader())
                 .processor(alarmUpdateProcessor())
                 .writer(alarmUpdateJpaWriter())
                 .build();
