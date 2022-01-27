@@ -39,10 +39,18 @@ public class Medicine {
 	@JoinColumn(name="category_id") // (2)
 	private Category category;
 	
+	@Column(columnDefinition="BIGINT DEFAULT 0")
+	private Long doseCount;
+	
 	public Medicine create(String name, Long categoryId, Long brandId) {
 		this.name = name;
 		this.brand = Brand.builder().id(brandId).build();
 		this.category = Category.builder().id(categoryId).build();
+		return this;
+	}
+	
+	public Medicine addDailyDoseCount (Long dailyDoseCount) {
+		this.doseCount += dailyDoseCount;
 		return this;
 	}
 	
